@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 games { 'gta5' }
 author 'OppoNoppo#0226'
-description 'op-duty | ox_lib'
+description 'op-duty | duty script with ox_lib'
 version '1.0.0'
 
 lua54 'yes'
@@ -18,7 +18,6 @@ shared_script {
 }
 
 server_script {
-    '@oxmysql/lib/MySQL.lua',
     'server/*.lua'
 }
 
