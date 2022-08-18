@@ -1,3 +1,11 @@
+local ESX = nil
+CreateThread(function ()
+    while ESX == nil do
+        Wait(500)
+        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+    end
+end)
+
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
