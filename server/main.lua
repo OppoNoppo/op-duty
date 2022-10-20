@@ -1,3 +1,4 @@
+lib.versionCheck('OppoNoppo/op-duty')
 lib.callback.register('op-duty:swapDuty', function()
     
     local xPlayer = ESX.GetPlayerFromId(source)
