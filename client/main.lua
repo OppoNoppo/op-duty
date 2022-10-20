@@ -32,49 +32,51 @@ CreateThread(function ()
         end
         for k,v in pairs(Config.dutyJobs) do
             local d = Config.dutyJobs
-            local po = lib.points.new(d[k].coords, 2, {})
-            function po:onEnter()
-                inMarker = true
-                if (ESX.PlayerData.job.name == Config.dutyJobs[k].onDuty or ESX.PlayerData.job.name == Config.dutyJobs[k].offDuty) then
-                    lib.showTextUI("[E] - On/Off Duty")
+            for i=1, #d[k].coords do
+                local po = lib.points.new(d[k].coords[i], 2, {})
+                function po:onEnter()
+                    inMarker = true
+                    if (ESX.PlayerData.job.name == Config.dutyJobs[k].onDuty or ESX.PlayerData.job.name == Config.dutyJobs[k].offDuty) then
+                        lib.showTextUI("[E] - On/Off Duty")
+                    end
                 end
-            end
-            function po:nearby()
-                if self.currentDistance < 2.0 and IsControlJustReleased(0, 38) then
-                    if ESX.PlayerData.job.name == Config.dutyJobs[k].onDuty or ESX.PlayerData.job.name == Config.dutyJobs[k].offDuty then
-                        local swaps = lib.callback.await('op-duty:swapDuty', false)
-                            
-                        if swaps.status then
-
-                            local desc, type
-                            if swaps.was == Config.dutyJobs[k].onDuty then
-                                desc = "You are now off duty" 
-                                type = 'error'
-                            elseif swaps.was == Config.dutyJobs[k].offDuty then
-                                desc = "You are now on duty"
-                                type = 'success'
-                            end
-
-                            if desc and type then
+                function po:nearby()
+                    if self.currentDistance < 2.0 and IsControlJustReleased(0, 38) then
+                        if ESX.PlayerData.job.name == Config.dutyJobs[k].onDuty or ESX.PlayerData.job.name == Config.dutyJobs[k].offDuty then
+                            local swaps = lib.callback.await('op-duty:swapDuty', false)
+                                
+                            if swaps.status then
+    
+                                local desc, type
+                                if swaps.was == Config.dutyJobs[k].onDuty then
+                                    desc = "You are now off duty" 
+                                    type = 'error'
+                                elseif swaps.was == Config.dutyJobs[k].offDuty then
+                                    desc = "You are now on duty"
+                                    type = 'success'
+                                end
+    
+                                if desc and type then
+                                    lib.notify({
+                                        title = "Duty",
+                                        description = desc,
+                                        type = type
+                                    })
+                                end
+                            else
                                 lib.notify({
                                     title = "Duty",
-                                    description = desc,
-                                    type = type
+                                    description = "Error during change",
+                                    type = 'error'
                                 })
                             end
-                        else
-                            lib.notify({
-                                title = "Duty",
-                                description = "Error during change",
-                                type = 'error'
-                            })
                         end
                     end
                 end
-            end
-            function po:onExit()
-                inMarker = false
-                lib.hideTextUI()
+                function po:onExit()
+                    inMarker = false
+                    lib.hideTextUI()
+                end
             end
         end
     else
